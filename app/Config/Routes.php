@@ -9,23 +9,20 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index', ['filter' => 'auth']);
 
 $routes->get('login', 'AuthController::login');
-$routes->post('login', 'AuthController::login');
+$routes->post('login', 'AuthController::login', ['filter' => 'redirect']);
 $routes->get('logout', 'AuthController::logout');
 
-$routes->group('produk', ['filter' => 'auth'], function ($routes) { 
-    $routes->get('', 'ProdukController::index');
-    $routes->post('', 'ProdukController::create');
-    $routes->post('edit/(:any)', 'ProdukController::edit/$1');
-    $routes->get('delete/(:any)', 'ProdukController::delete/$1');
-    $routes->get('download', 'ProdukController::download');
-});
+$routes->get('produk', 'ProdukController::index', ['filter' => 'auth']);
+$routes->post('produk', 'ProdukController::create', ['filter' => 'auth']);
+$routes->post('produk/edit/(:any)', 'ProdukController::edit/$1', ['filter' => 'auth']);
+$routes->get('produk/delete/(:any)', 'ProdukController::delete/$1', ['filter' => 'auth']);
+$routes->get('produk/download', 'ProdukController::download', ['filter' => 'auth']);
 
-$routes->group('kategori', ['filter' => 'auth'], function ($routes) { 
-    $routes->get('', 'KategoriController::index');
-    $routes->post('', 'KategoriController::create');
-    $routes->post('edit/(:any)', 'KategoriController::edit/$1');
-    $routes->get('delete/(:any)', 'KategoriController::delete/$1');
-});
+
+$routes->get('produk-kategori', 'ProdukkategoriController::index', ['filter' => 'auth']);
+$routes->post('produk-kategori', 'ProdukkategoriController::create', ['filter' => 'auth']);
+$routes->post('produk-kategori/edit/(:any)', 'ProdukkategoriController::edit/$1', ['filter' => 'auth']);
+$routes->get('produk-kategori/delete/(:any)', 'ProdukkategoriController::delete/$1', ['filter' => 'auth']);
 
 $routes->group('keranjang', ['filter' => 'auth'], function ($routes) {
     $routes->get('', 'TransaksiController::index');
@@ -35,8 +32,14 @@ $routes->group('keranjang', ['filter' => 'auth'], function ($routes) {
     $routes->get('clear', 'TransaksiController::cart_clear');
 });
 
-$routes->get('keranjang', 'TransaksiController::index', ['filter' => 'auth']);
-$routes->get('faq', 'FaqController::index', ['filter' => 'auth']);
-$routes->get('/home', 'Home::index', ['filter' => 'redirect']);
+$routes->get('checkout', 'TransaksiController::checkout', ['filter' => 'auth']);
+$routes->post('buy', 'TransaksiController::buy', ['filter' => 'auth']);
 
+$routes->get('get-location', 'TransaksiController::getLocation', ['filter' => 'auth']);
+$routes->get('get-cost', 'TransaksiController::getCost', ['filter' => 'auth']);
 
+$routes->get('faq', 'Home::faq', ['filter' => 'auth']);
+$routes->get('profile', 'Home::profile', ['filter' => 'auth']);
+$routes->get('contact', 'Home::contact', ['filter' => 'auth']);
+
+$routes->resource('api', ['controller' => 'apiController']);
