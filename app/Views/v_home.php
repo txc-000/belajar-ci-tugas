@@ -1,5 +1,12 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('content') ?>
+<?php if (!empty($diskon)) : ?>
+    <div class="alert alert-success">
+        <strong>Diskon Hari Ini!</strong><br>
+        Dapatkan diskon sebesar <?= number_to_currency($diskon['nominal'], 'IDR') ?> untuk semua produk.
+    </div>
+<?php endif; ?>
+
 <?php
 if (session()->getFlashData('success')) {
 ?>

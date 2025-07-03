@@ -29,12 +29,15 @@
         }
         ?>
 
-        <li class="nav-item">
-            <a class="nav-link <?php echo (uri_string() == 'profile') ? "" : "collapsed" ?>" href="profile">
-                <i class="bi bi-person"></i>
-                <span>Profile</span>
-            </a>
-        </li><!-- End Profile Nav -->
+        <?php if (session()->get('role') == 'admin') : ?>
+            <li class="nav-item">
+                <a class="nav-link <?php echo (uri_string() == 'diskon') ? '' : 'collapsed' ?>" href="<?= base_url('diskon') ?>">
+                    <i class="bi bi-percent"></i>
+                    <span>Diskon</span>
+                </a>
+            </li><!-- End Diskon Nav -->
+        <?php endif; ?>
+
 
         <li class="nav-item">
             <a class="nav-link <?php echo (uri_string() == 'produk-kategori') ? '' : 'collapsed' ?>" href="produk-kategori">
@@ -67,6 +70,6 @@
 
 
 
-    
+
 
 </aside><!-- End Sidebar-->

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\KategoriModel;
 
-class KategoriController extends BaseController
+class ProdukkategoriController extends BaseController
 {
     protected $product_category;
 

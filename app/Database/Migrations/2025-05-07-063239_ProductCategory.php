@@ -7,27 +7,28 @@ use CodeIgniter\Database\Migration;
 class ProductCategory extends Migration
 {
     public function up()
-    {
+{
+    if (! $this->db->tableExists('product_category')) {
         $this->forge->addField([
-            'id'          => [
+            'id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'category_name'       => [
+            'category_name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '100',
             ],
             'description' => [
-                'type'       => 'TEXT',
-                'null'       => true,
+                'type' => 'TEXT',
+                'null' => true,
             ],
-            'created_at'  => [
+            'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'updated_at'  => [
+            'updated_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
@@ -35,6 +36,8 @@ class ProductCategory extends Migration
         $this->forge->addKey('id', true);
         $this->forge->createTable('product_category');
     }
+}
+
 
     public function down()
     {

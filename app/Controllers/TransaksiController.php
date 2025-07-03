@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\TransactionModel;
 use App\Models\TransactionDetailModel;
+use App\Models\DiskonModel;
 
 class TransaksiController extends BaseController
 {
@@ -157,13 +158,23 @@ class TransaksiController extends BaseController
 
             $last_insert_id = $this->transaction->getInsertID();
 
+            // Ambil diskon dari DB
+            $diskonModel = new DiskonModel();
+            $tanggalHariIni = date('Y-m-d');
+            $diskonData = $diskonModel->where('tanggal', $tanggalHariIni)->first();
+            $nominalDiskon = $diskonData ? $diskonData['nominal'] : 0;
+
+
             foreach ($this->cart->contents() as $value) {
+                $hargaAsli = $value['price'];
+                $hargaSetelahDiskon = max(0, $hargaAsli - $nominalDiskon); // Hindari harga negatif
+
                 $dataFormDetail = [
                     'transaction_id' => $last_insert_id,
                     'product_id' => $value['id'],
                     'jumlah' => $value['qty'],
-                    'diskon' => 0,
-                    'subtotal_harga' => $value['qty'] * $value['price'],
+                    'diskon' => $nominalDiskon,
+                    'subtotal_harga' => $hargaSetelahDiskon * $value['qty'],
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ];
@@ -175,5 +186,33 @@ class TransaksiController extends BaseController
 
             return redirect()->to(base_url());
         }
+    }
+
+    public function history()
+    {
+        $username = session()->get('username');
+
+        $data['transaksi'] = $this->transaction
+            ->where('username', $username)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        return view('v_transaksi', $data);
+    }
+
+    public function apiTransaksi()
+    {
+        $username = session()->get('username'); // ambil username dari session
+
+        $data = $this->transaction
+            ->where('username', $username)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Data transaksi berhasil diambil',
+            'data' => $data
+        ]);
     }
 }
